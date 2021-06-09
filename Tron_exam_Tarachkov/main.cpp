@@ -20,7 +20,7 @@ int main()
         window.draw(shape);
         window.display();
     }
-    std::cout << "Check2";
+    std::cout << "Check3";
 
     return 0;
 }
