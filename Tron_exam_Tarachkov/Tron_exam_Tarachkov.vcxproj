@@ -144,6 +144,9 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Player.hpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\sfml_audio.redist.2.5.1\build\native\sfml_audio.redist.targets" Condition="Exists('..\packages\sfml_audio.redist.2.5.1\build\native\sfml_audio.redist.targets')" />
