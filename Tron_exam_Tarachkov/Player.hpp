@@ -50,7 +50,7 @@ class Player
 			m_y = 1;
 		}
 	}
-	#pragma endregion Функции с изменением движения игрока
+	#pragma endregion Всем привет я только проснулся
 
 	#pragma region GETTERS
 	int X() { return m_x; }
