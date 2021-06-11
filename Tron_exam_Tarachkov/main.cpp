@@ -77,9 +77,6 @@ int main()
         if (Keyboard::isKeyPressed(Keyboard::S)) if (p2.dir != 3) p2.dir = 0;
 
         if (!Game)    continue;
-
-        for (int i = 0; i < speed; i++)
-        {
             p1.tick(); p2.tick();
             if (field[p1.x][p1.y] == 1) Game = 0;
             if (field[p2.x][p2.y] == 1) Game = 0;
@@ -90,7 +87,6 @@ int main()
             c.setPosition(p1.x, p1.y); c.setFillColor(p1.color);    t.draw(c);
             c.setPosition(p2.x, p2.y); c.setFillColor(p2.color);    t.draw(c);
             t.display();
-        }
 
         ////// draw  ///////
         window.clear();
