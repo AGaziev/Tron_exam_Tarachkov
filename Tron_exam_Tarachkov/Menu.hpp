@@ -40,11 +40,11 @@ namespace Tron
 			std::shared_ptr<Button> PurpleBut = std::make_shared<Button>(btwClrSetW * 4 + clrSize * 3, 4 * btwButSet + 3 * mainH, ButtonType::C_PURPLE);
 			m_buttonsS.push_back(PurpleBut);
 			//--------------------------—»—“≈ÃÕ€≈  ÕŒœ » ¬ Õ¿—“–Œ… ¿’--------------------------------
-			std::shared_ptr<Button> BackBut = std::make_shared<Button>((window.get()->getSize().x - mainW) / 2, btwButSet * 1 + 0 * btwButSet, ButtonType::BACKTOMENU);
+			std::shared_ptr<Button> BackBut = std::make_shared<Button>((window.get()->getSize().x - mainW) / 2, btwButSet * 1 + 0 * mainH, ButtonType::BACKTOMENU);
 			m_buttonsS.push_back(BackBut);
-			std::shared_ptr<Button> Choose1But = std::make_shared<Button>((window.get()->getSize().x - 2 * mainW) / 3, btwButSet * 2 + 1 * btwButSet, ButtonType::CHOOSECOLORP1);
+			std::shared_ptr<Button> Choose1But = std::make_shared<Button>((window.get()->getSize().x - 2 * mainW) / 3, btwButSet * 2 + 1 * mainH, ButtonType::CHOOSECOLORP1);
 			m_buttonsS.push_back(Choose1But);
-			std::shared_ptr<Button> Choose2But = std::make_shared<Button>((window.get()->getSize().x * 2 - mainW) / 3 , btwButSet * 2 + 1 * btwButSet, ButtonType::CHOOSECOLORP2);
+			std::shared_ptr<Button> Choose2But = std::make_shared<Button>((window.get()->getSize().x * 2 - mainW) / 3 , btwButSet * 2 + 1 * mainH, ButtonType::CHOOSECOLORP2);
 			m_buttonsS.push_back(Choose2But);
 
 		}
