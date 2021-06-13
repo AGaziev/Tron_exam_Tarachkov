@@ -7,9 +7,8 @@ namespace Tron
 	class Player
 	{
 	public:
-		Player(sf::Color clr, int w, int h, int p) // Передаем цвет персонажа, Ширину и высоту окна, номер игрока
+		Player(int w, int h, int p) // Размер поля, номер игрока
 		{
-			p_clr = clr;
 			m_w = w; m_h = h;
 			if (p = 1) // 1 игрок будет в середине левой половины экрана и двигается вправо
 			{
@@ -62,9 +61,18 @@ namespace Tron
 		sf::Color Color() { return p_clr; }
 		#pragma endregion
 
-		void move() {
-			m_x += dx * speed;
-			m_y += dy * speed;
+		bool move(bool* map[80][80]) {
+			if (isAlive(map)) {//проверка на столкновение
+				m_x += dx * speed;//изменение координат
+				m_y += dy * speed;
+				return true;
+			}
+			else return false;
+		}
+
+		void setColor(sf::Color clr)
+		{
+			p_clr = clr;
 		}
 
 	private:
@@ -73,6 +81,12 @@ namespace Tron
 		int	dx, dy;			//Directional vectors
 		int m_w, m_h;		//Screen sizes
 		int speed = 1;		//Для фичи с турбо, пока будет константой
+		bool isAlive(bool* map[80][80])
+		{
+			if (m_x + dx > 79 || m_y + dy > 79 || m_y + dy < 0 || m_x + dx < 0)
+				return false;
+			return !map[m_x+dx][m_y+dy];
+		}
 	};
 
 }
