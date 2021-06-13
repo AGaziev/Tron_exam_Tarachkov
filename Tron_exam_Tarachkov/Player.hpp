@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 namespace Tron
 {
@@ -12,50 +13,51 @@ namespace Tron
 
 		void Setinfo(sf::Color color, int w, int h, int p) // Цвет игрока, размер поля, номер игрока
 		{
-			p_clr = color;
+			m_lives = 3;
+			m_clr = color;
 			m_w = w; m_h = h;
-			if (p = 1) // 1 игрок будет в середине левой половины экрана и двигается вправо
+			if (p == 1) // 1 игрок будет в середине левой половины экрана и двигается вправо
 			{
 				m_x = w / 4;
 				m_y = h / 2;
-				dx = 1;
-				dy = 0;
+				m_dx = 1;
+				m_dy = 0;
 			}
 			else { // 2 игрок в правой середине и двигается влево
 				m_x = 3 * w / 4;
 				m_y = h / 2;
-				dx = -1;
-				dy = 0;
+				m_dx = -1;
+				m_dy = 0;
 			}
 		}
 		
 		#pragma region Изменение движения
 		void Left() {
-			if (m_y != 0)
+			if (m_dy != 0)
 			{
-				m_y = 0;
-				m_x = -1;
+				m_dy = 0;
+				m_dx = -1;
 			}
 		}
 		void Right() {
-			if (m_y != 0)
+			if (m_dy != 0)
 			{
-				m_y = 0;
-				m_x = -1;
+				m_dy = 0;
+				m_dx = 1;
 			}
 		}
 		void Up() {
-			if (m_x != 0)
+			if (m_dx != 0)
 			{
-				m_x = 0;
-				m_y = -1;
+				m_dx = 0;
+				m_dy = -1;
 			}
 		}
 		void Down() {
-			if (m_x != 0)
+			if (m_dx != 0)
 			{
-				m_x = 0;
-				m_y = 1;
+				m_dx = 0;
+				m_dy = 1;
 			}
 		}
 		#pragma endregion Функции с изменением движения игрока
@@ -63,34 +65,33 @@ namespace Tron
 		#pragma region GETTERS
 		int X() { return m_x; }
 		int Y() { return m_y; }
-		sf::Color Color() { return p_clr; }
+		sf::Color Color() { return m_clr; }
+		int lives() { return m_lives; } 
 		#pragma endregion
 
-		bool move(bool* map[80][80]) {
-			if (isAlive(map)) {//проверка на столкновение
-				m_x += dx * speed;//изменение координат
-				m_y += dy * speed;
+		bool move(bool map[80][80]) {
+			if (checkAlive(map)) {//проверка на столкновение
+				m_x += m_dx;//изменение координат
+				m_y += m_dy;
 				return true;
 			}
-			else return false;
+			return false;
 		}
 
-		void setColor(sf::Color clr)
-		{
-			p_clr = clr;
-		}
+		void setColor(sf::Color clr){ m_clr = clr; }
+		void setLives(int m) { m_lives -= m; }
 
 	private:
-		sf::Color p_clr;	//Player's clr
+		sf::Color m_clr;	//Player's clr
 		int m_x, m_y;		//Players' coords
-		int	dx, dy;			//Directional vectors
-		int m_w, m_h;		//Screen sizes
-		int speed = 1;		//Для фичи с турбо, пока будет константой
-		bool isAlive(bool* map[80][80])
+		int	m_dx, m_dy;		//Directional vectors
+		int m_w, m_h;	//Screen sizes
+		int m_lives;
+		bool checkAlive(bool map[80][80])
 		{
-			if (m_x + dx > 79 || m_y + dy > 79 || m_y + dy < 0 || m_x + dx < 0)
+			if (m_x + m_dx > 79 || m_y + m_dy > 79 || m_y + m_dy < 0 || m_x + m_dx < 0)
 				return false;
-			return !map[m_x+dx][m_y+dy];
+			return !map[m_x+m_dx][m_y+m_dy];
 		}
 	};
 

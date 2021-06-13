@@ -35,8 +35,8 @@ int main()
         {
         case ButtonType::NEWGAME:
             std::cerr << "Button 'New Game' pressed" << std::endl;
-            //Game.Settup();
-            //Game.LifeCycle();
+            Game.Settup();
+            Game.LifeCycle();
             break;
 
         case ButtonType::SETTINGS:
