@@ -7,8 +7,12 @@ namespace Tron
 	class Player
 	{
 	public:
-		Player(int w, int h, int p) // Размер поля, номер игрока
+		
+		Player() {}
+
+		void Setinfo(sf::Color color, int w, int h, int p) // Цвет игрока, размер поля, номер игрока
 		{
+			p_clr = color;
 			m_w = w; m_h = h;
 			if (p = 1) // 1 игрок будет в середине левой половины экрана и двигается вправо
 			{
@@ -24,6 +28,7 @@ namespace Tron
 				dy = 0;
 			}
 		}
+		
 		#pragma region Изменение движения
 		void Left() {
 			if (m_y != 0)

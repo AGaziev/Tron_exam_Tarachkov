@@ -13,11 +13,11 @@ namespace Tron
 			m_width = m_window->getSize().x;
 			m_height = m_window->getSize().y;
 			m_colorP1 = sf::Color::Green;
-			m_colorP2 = sf::Color::Red;
+			m_colorP2 = sf::Color::Red;			
 		}
 
 		//TO DO
-#pragma region SETTUP
+		#pragma region SETTUP
 		void SetColors(sf::Color colorP1, sf::Color colorP2)
 		{
 			m_colorP1 = colorP1;
@@ -42,6 +42,9 @@ namespace Tron
 
 		bool SetPlayers()
 		{
+			m_P1.Setinfo(m_colorP1, 80, 80, 1);
+			m_P1.Setinfo(m_colorP1, 80, 80, 1);
+			
 			/*m_p1.setColor(m_colorP1);
 			m_p2.setColor(m_colorP2);*/
 			/*
@@ -66,7 +69,7 @@ namespace Tron
 				return false;
 			return true;
 		}
-#pragma endregion
+		#pragma endregion
 
 		void LifeCycle()
 		{
@@ -80,6 +83,8 @@ namespace Tron
 		sf::Sprite m_back;
 		sf::RenderTexture m_map;
 		bool map[80][80] = { 0 };
+
+		Player m_P1, m_P2;
 	};
 
 }
