@@ -1,5 +1,9 @@
 #pragma once
 #include "Button.hpp"
+const int mainW = 300; //
+const int mainH = 100; //Размеры основных кнопок
+const int clrSize = 100; //Размеры цветов
+
 namespace Tron
 {
 	class Menu
@@ -7,37 +11,40 @@ namespace Tron
 	public:
 		Menu(std::shared_ptr<sf::RenderWindow> window) //создает векторы с пустыми(!) кнопками для меню и для настроек
 		{
+			int btwButMain = (window.get()->getSize().y - 3 * mainH) / 4; //дистанция между кнопками в главном меню (4-количество пустых пространств между кнопками)
+			int btwClrSetW = (window.get()->getSize().x - 4 * clrSize) / 5;//дистанция по ширине между цветами в настройках (5-количество пустых пространств между кнопками)
+			int btwButSet = (window.get()->getSize().y - 4 * mainH) / 5;//дистанция по высоте между кнопками в настройках (5-количество пустых пространств между кнопками)
 			m_window = window;
 			//-----------------------------КНОПКИ МЕНЮ------------------------------------
-			std::shared_ptr<Button> newGameBut = std::make_shared<Button>(350, 200, ButtonType::NEWGAME);
+			std::shared_ptr<Button> newGameBut = std::make_shared<Button>((window.get()->getSize().x - mainW) / 2, btwButMain * 1 + mainH * 0, ButtonType::NEWGAME);
 			m_buttonsM.push_back(newGameBut);
-			std::shared_ptr<Button> settingsBut = std::make_shared<Button>(350, 350, ButtonType::SETTINGS);
+			std::shared_ptr<Button> settingsBut = std::make_shared<Button>((window.get()->getSize().x - mainW) / 2, btwButMain * 2 + mainH * 1, ButtonType::SETTINGS);
 			m_buttonsM.push_back(settingsBut);
-			std::shared_ptr<Button> exitBut = std::make_shared<Button>(350, 500, ButtonType::EXIT);
+			std::shared_ptr<Button> exitBut = std::make_shared<Button>((window.get()->getSize().x - mainW) / 2, btwButMain * 3 + mainH * 2, ButtonType::EXIT);
 			m_buttonsM.push_back(exitBut);
 			//------------------------КНОПКИ ЦВЕТОВ В НАСТРОЙКАХ----------------------------------------
-			std::shared_ptr<Button> redBut = std::make_shared<Button>(310, 400, ButtonType::C_RED);
+			std::shared_ptr<Button> redBut = std::make_shared<Button>(btwClrSetW * 1 + clrSize * 0, 3 * btwButSet + 2 * mainH, ButtonType::C_RED);
 			m_buttonsS.push_back(redBut);
-			std::shared_ptr<Button> blueBut = std::make_shared<Button>(410, 400, ButtonType::C_BLUE);
+			std::shared_ptr<Button> blueBut = std::make_shared<Button>(btwClrSetW * 2 + clrSize * 1, 3 * btwButSet + 2 * mainH, ButtonType::C_BLUE);
 			m_buttonsS.push_back(blueBut);
-			std::shared_ptr<Button> greenBut = std::make_shared<Button>(510, 400, ButtonType::C_GREEN);
+			std::shared_ptr<Button> greenBut = std::make_shared<Button>(btwClrSetW * 3 + clrSize * 2, 3 * btwButSet + 2 * mainH, ButtonType::C_GREEN);
 			m_buttonsS.push_back(greenBut);
-			std::shared_ptr<Button> YellowBut = std::make_shared<Button>(610, 400, ButtonType::C_YELLOW);
+			std::shared_ptr<Button> YellowBut = std::make_shared<Button>(btwClrSetW * 4 + clrSize * 3, 3 * btwButSet + 2 * mainH, ButtonType::C_YELLOW);
 			m_buttonsS.push_back(YellowBut);
-			std::shared_ptr<Button> OrangeBut = std::make_shared<Button>(310, 500, ButtonType::C_ORANGE);
+			std::shared_ptr<Button> OrangeBut = std::make_shared<Button>(btwClrSetW * 1 + clrSize * 0, 4 * btwButSet + 3 * mainH, ButtonType::C_ORANGE);
 			m_buttonsS.push_back(OrangeBut);
-			std::shared_ptr<Button> WhiteBut = std::make_shared<Button>(410, 500, ButtonType::C_WHITE);
+			std::shared_ptr<Button> WhiteBut = std::make_shared<Button>(btwClrSetW * 2 + clrSize * 1, 4 * btwButSet + 3 * mainH, ButtonType::C_WHITE);
 			m_buttonsS.push_back(WhiteBut);
-			std::shared_ptr<Button> MagentaBut = std::make_shared<Button>(510, 500, ButtonType::C_MAGENTA);
+			std::shared_ptr<Button> MagentaBut = std::make_shared<Button>(btwClrSetW * 3 + clrSize * 2, 4 * btwButSet + 3 * mainH, ButtonType::C_MAGENTA);
 			m_buttonsS.push_back(MagentaBut);
-			std::shared_ptr<Button> PurpleBut = std::make_shared<Button>(610, 500, ButtonType::C_PURPLE);
+			std::shared_ptr<Button> PurpleBut = std::make_shared<Button>(btwClrSetW * 4 + clrSize * 3, 4 * btwButSet + 3 * mainH, ButtonType::C_PURPLE);
 			m_buttonsS.push_back(PurpleBut);
 			//--------------------------СИСТЕМНЫЕ КНОПКИ В НАСТРОЙКАХ--------------------------------
-			std::shared_ptr<Button> BackBut = std::make_shared<Button>(1, 1, ButtonType::BACKTOMENU);
+			std::shared_ptr<Button> BackBut = std::make_shared<Button>((window.get()->getSize().x - mainW) / 2, btwButSet * 1 + 0 * btwButSet, ButtonType::BACKTOMENU);
 			m_buttonsS.push_back(BackBut);
-			std::shared_ptr<Button> Choose1But = std::make_shared<Button>(50, 200, ButtonType::CHOOSECOLORP1);
+			std::shared_ptr<Button> Choose1But = std::make_shared<Button>((window.get()->getSize().x - 2 * mainW) / 3, btwButSet * 2 + 1 * btwButSet, ButtonType::CHOOSECOLORP1);
 			m_buttonsS.push_back(Choose1But);
-			std::shared_ptr<Button> Choose2But = std::make_shared<Button>(540, 200, ButtonType::CHOOSECOLORP2);
+			std::shared_ptr<Button> Choose2But = std::make_shared<Button>((window.get()->getSize().x * 2 - mainW) / 3 , btwButSet * 2 + 1 * btwButSet, ButtonType::CHOOSECOLORP2);
 			m_buttonsS.push_back(Choose2But);
 
 		}

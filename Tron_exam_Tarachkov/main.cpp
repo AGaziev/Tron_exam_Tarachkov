@@ -9,8 +9,8 @@ using Tron::ButtonType;
 
 int main()
 {
-    const int W = 1000;
-    const int H = 700;
+    const int W = 800;
+    const int H = 1000;
 
     std::shared_ptr<sf::RenderWindow> window = std::make_shared<sf::RenderWindow>(sf::VideoMode(W, H), "Tron!");
 
@@ -50,7 +50,7 @@ int main()
 
         menu.DisplayMenu();
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
 
     return 0;

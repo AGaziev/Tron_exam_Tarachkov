@@ -27,6 +27,7 @@ namespace Tron
 
 		bool SetBackground()
 		{
+
 		}
 
 		bool SetInfo() // настройка счета или времени игры (загрузка шрифтов и тому подобное)
