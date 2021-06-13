@@ -10,7 +10,7 @@ using Tron::ButtonType;
 int main()
 {
     const int W = 800;
-    const int H = 1000;
+    const int H = 900;
 
     std::shared_ptr<sf::RenderWindow> window = std::make_shared<sf::RenderWindow>(sf::VideoMode(W, H), "Tron!");
 
