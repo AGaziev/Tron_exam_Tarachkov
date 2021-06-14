@@ -18,7 +18,8 @@ int main()
     if (!menu.Setup())
         return 1;
     Tron::Game Game(window);
-    sf::Color ColorP1, ColorP2;
+    sf::Color ColorP1 = sf::Color::Green, ColorP2 = sf::Color::Red;
+    
 
     while (window->isOpen())
     {

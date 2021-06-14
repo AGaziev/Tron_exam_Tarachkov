@@ -57,6 +57,17 @@ namespace Tron
 			for (const auto& button : m_buttonsS)
 				if (!button->Setup())
 					return false;
+			
+			if (!m_textureP1.loadFromFile("..\\assets\\ChoosedP1.png"))
+				return false;
+			if (!m_textureP2.loadFromFile("..\\assets\\ChoosedP2.png"))
+				return false;
+			
+			m_spriteP1.setTexture(m_textureP1);
+			m_spriteP2.setTexture(m_textureP2);
+			m_spriteP1.setPosition(m_buttonsS[2]->X(), m_buttonsS[2]->Y());
+			m_spriteP2.setPosition(m_buttonsS[0]->X(), m_buttonsS[0]->Y());
+
 			return true;
 		}
 
@@ -73,6 +84,8 @@ namespace Tron
 			m_window->clear();
 			for (const auto& button : m_buttonsS)
 				m_window->draw(button->Get());
+			m_window->draw(m_spriteP1);
+			m_window->draw(m_spriteP2);
 			m_window->display();
 		}
 
@@ -120,43 +133,35 @@ namespace Tron
 					//---------------КНОПКИ ЦВЕТА----------------------------
 				case ButtonType::C_RED:
 					std::cerr << "RED" << std::endl; //для дебага, потом убрать!
-					if (m_buttonsS[9]->GetActivity())	colorP1 = sf::Color::Red;	//если нажата кнопка "выбрать цвет для 1 игрока" цвет присваиваем 1 игроку
-					if (m_buttonsS[10]->GetActivity()) colorP2 = sf::Color::Red;	//аналогично для 2 игрока (в противном случае ничего не делаем)				
+					PressColorBut(colorP1, colorP2, 0);
 					break;
 				case ButtonType::C_BLUE:
 					std::cerr << "BLUE" << std::endl;
-					if (m_buttonsS[9]->GetActivity())	colorP1 = sf::Color::Cyan;
-					if (m_buttonsS[10]->GetActivity()) colorP2 = sf::Color::Cyan;
+					PressColorBut(colorP1, colorP2, 1);
 					break;
 				case ButtonType::C_GREEN:
 					std::cerr << "Green" << std::endl;
-					if (m_buttonsS[9]->GetActivity())	colorP1 = sf::Color::Green;
-					if (m_buttonsS[10]->GetActivity()) colorP2 = sf::Color::Green;
+					PressColorBut(colorP1, colorP2, 2);
 					break;
 				case ButtonType::C_YELLOW:
 					std::cerr << "Yellow" << std::endl;
-					if (m_buttonsS[9]->GetActivity())	colorP1 = sf::Color::Yellow;
-					if (m_buttonsS[10]->GetActivity()) colorP2 = sf::Color::Yellow;
+					PressColorBut(colorP1, colorP2, 3);
 					break;
 				case ButtonType::C_ORANGE:
 					std::cerr << "Orange" << std::endl;
-					if (m_buttonsS[9]->GetActivity())	colorP1 = sf::Color(255, 127, 39);
-					if (m_buttonsS[10]->GetActivity()) colorP2 = sf::Color(255, 127, 39);
+					PressColorBut(colorP1, colorP2, 4);
 					break;
 				case ButtonType::C_WHITE:
 					std::cerr << "White" << std::endl;
-					if (m_buttonsS[9]->GetActivity())	colorP1 = sf::Color::White;
-					if (m_buttonsS[10]->GetActivity()) colorP2 = sf::Color::White;
+					PressColorBut(colorP1, colorP2, 5);
 					break;
 				case ButtonType::C_MAGENTA:
 					std::cerr << "Magenta" << std::endl;
-					if (m_buttonsS[9]->GetActivity())	colorP1 = sf::Color::Magenta;
-					if (m_buttonsS[10]->GetActivity()) colorP2 = sf::Color::Magenta;
+					PressColorBut(colorP1, colorP2, 6);
 					break;
 				case ButtonType::C_PURPLE:
 					std::cerr << "Purple" << std::endl;
-					if (m_buttonsS[9]->GetActivity())	colorP1 = sf::Color(128, 0, 255);
-					if (m_buttonsS[10]->GetActivity()) colorP2 = sf::Color(128, 0, 255);
+					PressColorBut(colorP1, colorP2, 7);
 					break;
 					//------------------СИСТЕМНЫЕ КНОПКИ----------------------------
 				case ButtonType::CHOOSECOLORP1:
@@ -172,23 +177,6 @@ namespace Tron
 				} //ДОДЕЛАТЬ АНИМАЦИЮ ПРИ НАЖАТИИ
 
 				DisplaySettings(); // Вывод на экран
-				/*
-				m_window->clear();
-
-				sf::RectangleShape CLR1(sf::Vector2f(205, 80));
-				CLR1.setFillColor(colorP1);
-				CLR1.setPosition(50, 320);
-				m_window->draw(CLR1);
-
-				sf::RectangleShape CLR2(sf::Vector2f(205, 80));
-				CLR2.setFillColor(colorP2);
-				CLR2.setPosition(745, 320);
-				m_window->draw(CLR2);
-
-				for (const auto& button : m_buttonsS)
-					m_window->draw(button->Get());
-				m_window->display();*/
-
 
 				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
@@ -198,6 +186,54 @@ namespace Tron
 		std::shared_ptr<sf::RenderWindow> m_window;
 		std::vector<std::shared_ptr<Button>> m_buttonsM; //вектор кнопок для МЕНЮ
 		std::vector<std::shared_ptr<Button>> m_buttonsS; //вектор кнопок для НАСТРОЕК
+
+		sf::Texture m_textureP1, m_textureP2;
+		sf::Sprite m_spriteP1, m_spriteP2;
+
+		void PressColorBut(sf::Color& colorP1, sf::Color& colorP2, int numberBut)
+		{
+			sf::Color ColorNow;
+			
+			switch (numberBut)
+			{
+			case 0:
+				ColorNow = sf::Color::Red;
+				break;
+			case 1:
+				ColorNow = sf::Color::Cyan;
+				break;
+			case 2:
+				ColorNow = sf::Color::Green;
+				break;
+			case 3:
+				ColorNow = sf::Color::Yellow;
+				break;
+			case 4:
+				ColorNow = sf::Color(255, 127, 39);//Orange
+				break;
+			case 5:
+				ColorNow = sf::Color::White;
+				break;
+			case 6:
+				ColorNow = sf::Color::Magenta;
+				break;
+			case 7:
+				ColorNow = sf::Color(128, 0, 255); //Purple
+				break;
+			}	
+
+			if (m_buttonsS[9]->GetActivity() && colorP2 != ColorNow)
+			{
+				colorP1 = ColorNow;
+				m_spriteP1.setPosition(m_buttonsS[numberBut]->X(), m_buttonsS[numberBut]->Y());
+			}
+			if (m_buttonsS[10]->GetActivity() && colorP1 != ColorNow)
+			{
+				colorP2 = ColorNow;
+				m_spriteP2.setPosition(m_buttonsS[numberBut]->X(), m_buttonsS[numberBut]->Y());
+			}
+
+		}
 	};
 
 

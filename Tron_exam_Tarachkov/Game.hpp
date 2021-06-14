@@ -89,7 +89,7 @@ namespace Tron
 				while (m_window->pollEvent(event))
 				{
 					if (event.type == sf::Event::Closed)
-						m_window->close();
+						return;
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))		m_P1.Left();
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))		m_P1.Right();

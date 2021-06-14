@@ -104,6 +104,8 @@ namespace Tron
 		{
 			return m_spriteButton;
 		}
+		int X() { return m_x; }
+		int Y() { return m_y; }
 
 		bool isPressed(sf::Vector2i mousePos) //функция нажатия на кнопки
 		{
