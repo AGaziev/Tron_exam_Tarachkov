@@ -62,8 +62,29 @@ namespace Tron
 		bool SetInfo() // настройка счета или времени игры (загрузка шрифтов и тому подобное)
 		{
 			if (!font.loadFromFile("..\\assets\\Adumu.ttf"))
-				return false;
+				return false;					
+						
+			m_scoreTextP1.setFont(font);
+			m_scoreTextP2.setFont(font);			
+			
+			m_scoreTextP1.setString(std::to_string(m_scoreP1));
+			m_scoreTextP2.setString(std::to_string(m_scoreP2));
+
+			// set the character size in pixels, not points!
+			m_scoreTextP1.setCharacterSize(36); 
+			m_scoreTextP2.setCharacterSize(36);
+			
+			m_scoreTextP1.setFillColor(sf::Color::Red);
+			m_scoreTextP2.setFillColor(sf::Color::Red);
+			
+			//m_scoreTextP1.setStyle(sf::Text::Bold); //посмотрите как вам жирный шрифт, может лучше
+			//m_scoreTextP2.setStyle(sf::Text::Bold);
+
+			m_scoreTextP1.setPosition(100, 40);
+			m_scoreTextP2.setPosition(700-36, 40);
+
 			return true;
+			
 		}
 
 		bool Settup()
@@ -111,18 +132,32 @@ namespace Tron
 					map[m_P2.X()][m_P2.Y()] = true;
 					if (!m_P1.move(map))
 					{
-						Game = false;
+						m_scoreP2++;
+						if (m_scoreP2 < 5)
+							Settup();//ѕќћ≈Ќя“№!!!!!
+						if (m_scoreP2==5)						
+							Game = false;
 						dead = 1;
 					}
-					if (!m_P2.move(map)) {
-						Game = false;
+					if (!m_P2.move(map)) 
+					{
+						m_scoreP1++;
+						if (m_scoreP1 < 5)
+							Settup(); //ѕќћ≈Ќя“№!!!!!
+						if(m_scoreP1==5)
+							Game = false;
 						dead = 2;
 					}
 				}else{
 					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 						break;
 				}
+				
+				m_scoreTextP1.setString(std::to_string(m_scoreP1));
+				m_scoreTextP2.setString(std::to_string(m_scoreP2));
 				m_window->clear();
+				m_window->draw(m_scoreTextP1);
+				m_window->draw(m_scoreTextP2);
 				m_window->draw(m_back);
 				m_window->display();
 				
@@ -131,7 +166,7 @@ namespace Tron
 		}
 
 	private:
-		sf::Font font;
+		
 		std::shared_ptr<sf::RenderWindow> m_window;
 		int m_width, m_height;
 		sf::Color m_colorP1, m_colorP2;
@@ -140,6 +175,11 @@ namespace Tron
 		sf::RenderTexture m_map;
 		bool map[80][80] = { 0 };
 		Player m_P1, m_P2;
+
+		int m_scoreP1=0, m_scoreP2=0;
+		sf::Font font;
+		sf::Text m_scoreTextP1, m_scoreTextP2;
+
 	};
 
 }
