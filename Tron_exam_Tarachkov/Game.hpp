@@ -1,5 +1,6 @@
 #pragma once
 #include"Player.hpp"
+#include <iostream>  // убрать потом
 
 namespace Tron
 {
@@ -30,10 +31,9 @@ namespace Tron
 
 		bool SetBackground()
 		{
-			sf::Texture t;
-			if (!t.loadFromFile("..\\assets\\Background.png"))
+			if (!m_textureBack.loadFromFile("..\\assets\\Background.png"))
 				return false;
-			m_spriteBackground.setTexture(t);
+			m_spriteBackground.setTexture(m_textureBack);
 			m_map.create(m_width, m_height);
 			m_map.setSmooth(true);
 			m_back.setPosition(0, 100);
@@ -48,7 +48,6 @@ namespace Tron
 			m_P2.Setinfo(m_colorP2, 80, 80, 2);
 			std::cout << m_P1.X() << "-p1-" << m_P1.Y() << std::endl;
 			std::cout << m_P2.X() << "-p2-" << m_P2.Y() << std::endl;
-			memset(map, 0, 6400);
 			/*m_p1.setColor(m_colorP1);
 			m_p2.setColor(m_colorP2);*/
 			/*
@@ -102,10 +101,17 @@ namespace Tron
 
 		void LifeCycle()
 		{
+			sf::RectangleShape segment(sf::Vector2f(10, 10));
 			bool Game = true;
-			int dead = 0;
+			bool Round = true;
 			while (m_window->isOpen())
 			{
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))//Выход из игры с обнулением счета
+				{
+					m_scoreP1 = 0; m_scoreP2 = 0;
+					Restart();
+					break;
+				}
 				sf::Event event;
 				while (m_window->pollEvent(event))
 				{
@@ -123,34 +129,42 @@ namespace Tron
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))		m_P2.Down();
 				
 				if (Game) {
-					sf::RectangleShape segment(sf::Vector2f(10, 10));
-					segment.setPosition(m_P1.X() * 10, m_P1.Y() * 10); segment.setFillColor(m_P1.Color());    m_map.draw(segment);
-					segment.setPosition(m_P2.X() * 10, m_P2.Y() * 10); segment.setFillColor(m_P2.Color());    m_map.draw(segment);
-					m_map.display();
+					if (Round) {
+						segment.setPosition(m_P1.X() * 10, m_P1.Y() * 10); segment.setFillColor(m_P1.Color());    m_map.draw(segment);
+						segment.setPosition(m_P2.X() * 10, m_P2.Y() * 10); segment.setFillColor(m_P2.Color());    m_map.draw(segment);
+						m_map.display();
 
-					map[m_P1.X()][m_P1.Y()] = true;
-					map[m_P2.X()][m_P2.Y()] = true;
-					if (!m_P1.move(map))
-					{
-						m_scoreP2++;
-						if (m_scoreP2 < 5)
-							Settup();//ПОМЕНЯТЬ!!!!!
-						if (m_scoreP2==5)						
-							Game = false;
-						dead = 1;
+						map[m_P1.X()][m_P1.Y()] = true;
+						map[m_P2.X()][m_P2.Y()] = true;
+						if (!m_P1.move(map))//проверка на столкновение первого игрока
+						{
+							//Выполнится один раз после столкновения
+							m_scoreP2++;
+							Round = false;
+							if (m_scoreP2 == 3) { Game = false; }
+						}
+						if (!m_P2.move(map)) //проверка на столкновение второго игрока
+						{
+							//Выполнится один раз после столкновения
+							m_scoreP1++;
+							Round = false;
+							if (m_scoreP1 == 3) { Game = false; }
+						}
 					}
-					if (!m_P2.move(map)) 
-					{
-						m_scoreP1++;
-						if (m_scoreP1 < 5)
-							Settup(); //ПОМЕНЯТЬ!!!!!
-						if(m_scoreP1==5)
-							Game = false;
-						dead = 2;
+					else {//Если закончился раунд
+						if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+						{
+							Round = true;
+							Restart();
+						}
+
 					}
-				}else{
+				}
+				else {//Если есть победитель
 					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+					{
 						break;
+					}
 				}
 				
 				m_scoreTextP1.setString(std::to_string(m_scoreP1));
@@ -165,10 +179,18 @@ namespace Tron
 			}
 		}
 
+		void Restart() {
+			memset(map, 0, 6400);
+			m_map.clear(); m_map.draw(m_spriteBackground);
+			m_P1.Reset();
+			m_P2.Reset();
+		}
+
 	private:
 		
 		std::shared_ptr<sf::RenderWindow> m_window;
 		int m_width, m_height;
+		sf::Texture m_textureBack;
 		sf::Color m_colorP1, m_colorP2;
 		sf::Sprite m_back;
 		sf::Sprite m_spriteBackground;

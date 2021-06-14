@@ -13,7 +13,7 @@ namespace Tron
 
 		void Setinfo(sf::Color color, int w, int h, int p) // ÷вет игрока, размер пол€, номер игрока
 		{
-			m_lives = 3;
+			m_num = p;
 			m_clr = color;
 			m_w = w; m_h = h;
 			if (p == 1) // 1 игрок будет в середине левой половины экрана и двигаетс€ вправо
@@ -66,7 +66,6 @@ namespace Tron
 		int X() { return m_x; }
 		int Y() { return m_y; }
 		sf::Color Color() { return m_clr; }
-		int lives() { return m_lives; } 
 		#pragma endregion
 
 		bool move(bool map[80][80]) {
@@ -79,14 +78,31 @@ namespace Tron
 		}
 
 		void setColor(sf::Color clr){ m_clr = clr; }
-		void setLives(int m) { m_lives -= m; }
+
+		void Reset() {
+			std::cout << m_num;
+			if (m_num == 1)
+			{
+				m_x = m_w / 4;
+				m_y = m_h / 2;
+				m_dx = 1;
+				m_dy = 0;
+			}
+			if (m_num == 2)
+			{
+				m_x = 3 * m_w / 4;
+				m_y = m_h / 2;
+				m_dx = -1;
+				m_dy = 0;
+			}
+		}
 
 	private:
 		sf::Color m_clr;	//Player's clr
+		int m_num;			//Ќомер игрока
 		int m_x, m_y;		//Players' coords
 		int	m_dx, m_dy;		//Directional vectors
-		int m_w, m_h;	//Screen sizes
-		int m_lives;
+		int m_w, m_h;		//Screen sizes
 		bool checkAlive(bool map[80][80])
 		{
 			if (m_x + m_dx > 79 || m_y + m_dy > 79 || m_y + m_dy < 0 || m_x + m_dx < 0)
