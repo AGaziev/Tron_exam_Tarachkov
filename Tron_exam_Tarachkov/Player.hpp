@@ -77,8 +77,6 @@ namespace Tron
 			return false;
 		}
 
-		void setColor(sf::Color clr){ m_clr = clr; }
-
 		void Reset() {
 			std::cout << m_num;
 			if (m_num == 1)
@@ -102,7 +100,7 @@ namespace Tron
 		int m_num;			//Номер игрока
 		int m_x, m_y;		//Players' coords
 		int	m_dx, m_dy;		//Directional vectors
-		int m_w, m_h;		//Screen sizes
+		int m_w, m_h;		//Screen sizes		
 		bool checkAlive(bool map[80][80])
 		{
 			if (m_x + m_dx > 79 || m_y + m_dy > 79 || m_y + m_dy < 0 || m_x + m_dx < 0)

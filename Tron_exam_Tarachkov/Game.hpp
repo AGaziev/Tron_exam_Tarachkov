@@ -95,6 +95,8 @@ namespace Tron
 			if (!SetInfo())
 				return false;
 			SetPlayers();
+			m_scoreP1 = 0; m_scoreP2 = 0;
+			Restart();
 			return true;
 		}
 		#pragma endregion
@@ -150,6 +152,13 @@ namespace Tron
 							Round = false;
 							if (m_scoreP1 == 3) { Game = false; }
 						}
+						if (m_P1.X() == m_P2.X() && m_P1.Y() == m_P2.Y())
+						{
+							segment.setPosition(m_P1.X() * 10, m_P1.Y() * 10); segment.setFillColor(m_P1.Color());    m_map.draw(segment);
+							segment.setPosition(m_P2.X() * 10, m_P2.Y() * 10); segment.setFillColor(m_P2.Color());    m_map.draw(segment);
+							m_map.display();
+							Round = false;
+						}
 					}
 					else {//Если закончился раунд
 						if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
@@ -175,7 +184,7 @@ namespace Tron
 				m_window->draw(m_back);
 				m_window->display();
 				
-				std::this_thread::sleep_for(std::chrono::milliseconds(100));
+				std::this_thread::sleep_for(std::chrono::milliseconds(50));
 			}
 		}
 
