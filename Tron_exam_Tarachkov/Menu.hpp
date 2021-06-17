@@ -1,5 +1,6 @@
 #pragma once
 #include "Button.hpp"
+#include <SFML/Audio.hpp>
 const int mainW = 300; //
 const int mainH = 100; //Размеры основных кнопок
 const int clrSize = 100; //Размеры цветов
@@ -49,7 +50,7 @@ namespace Tron
 
 		}
 
-		bool Setup() //настройка кнопок (загружаем текстуры)
+		bool SetTextures()
 		{
 			for (const auto& button : m_buttonsM)
 				if (!button->Setup())
@@ -57,18 +58,57 @@ namespace Tron
 			for (const auto& button : m_buttonsS)
 				if (!button->Setup())
 					return false;
-			
+
 			if (!m_textureP1.loadFromFile("..\\assets\\ChoosedP1.png"))
 				return false;
 			if (!m_textureP2.loadFromFile("..\\assets\\ChoosedP2.png"))
 				return false;
-			
+
 			m_spriteP1.setTexture(m_textureP1);
 			m_spriteP2.setTexture(m_textureP2);
 			m_spriteP1.setPosition(m_buttonsS[2]->X(), m_buttonsS[2]->Y());
 			m_spriteP2.setPosition(m_buttonsS[0]->X(), m_buttonsS[0]->Y());
 
 			return true;
+		}
+
+		bool SetMusic()
+		{			
+			if (!m_music.openFromFile("..\\music\\TRON Legacy.ogg"))
+				return false;
+			return true;
+		}
+		
+		bool Setup() //настройка кнопок (загружаем текстуры)
+		{
+			if (!SetTextures())
+				return false;
+			if (!SetMusic())
+				return false;
+			return true;
+		}
+
+		void turnOnOff(bool tmp)
+		{	
+			
+			if (tmp == true)
+			{
+				m_music.play();
+				/*for (int i = 0; i <100; i++) //ЗАТУХАНИЕ (наоборот, хз как назвать)
+				{
+					m_music.setVolume(i);
+					std::this_thread::sleep_for(std::chrono::milliseconds(10));
+				}*/		
+			}				
+			else
+			{
+				/*for (int i = 100; i > 0; i--) //ЗАТУХАНИЕ 
+				{
+					m_music.setVolume(i);
+					std::this_thread::sleep_for(std::chrono::milliseconds(5));
+				}		*/			
+				m_music.stop(); // или .pause() !!!!
+			}
 		}
 
 		void DisplayMenu() //функция вывода меню
@@ -174,7 +214,7 @@ namespace Tron
 					break;
 				case ButtonType::BACKTOMENU:
 					return;
-				} //ДОДЕЛАТЬ АНИМАЦИЮ ПРИ НАЖАТИИ
+				}
 
 				DisplaySettings(); // Вывод на экран
 
@@ -189,6 +229,7 @@ namespace Tron
 
 		sf::Texture m_textureP1, m_textureP2;
 		sf::Sprite m_spriteP1, m_spriteP2;
+		sf::Music m_music;
 
 		void PressColorBut(sf::Color& colorP1, sf::Color& colorP2, int numberBut)
 		{

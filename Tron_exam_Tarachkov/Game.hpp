@@ -1,5 +1,6 @@
 #pragma once
 #include"Player.hpp"
+#include <SFML/Audio.hpp>
 #include <iostream>  // убрать потом
 
 namespace Tron
@@ -18,14 +19,25 @@ namespace Tron
 		}
 
 		//TO DO
-		#pragma region SETTUP
+		#pragma region SETUP
 		void SetColors(sf::Color colorP1, sf::Color colorP2)
 		{
 			m_colorP1 = colorP1;
 			m_colorP2 = colorP2;
 		}
+		
 		bool SetMusic()
 		{
+			if (!g_music.openFromFile("..\\music\\Hotline.ogg"))
+				return false;
+			
+			if (!buffer.loadFromFile("..\\music\\crash7.wav"))
+			{
+				std::cerr << "Fail load crash";
+				return false;
+			}				
+			m_crashSound.setBuffer(buffer);			
+
 			return true;
 		}
 
@@ -47,14 +59,7 @@ namespace Tron
 			m_P1.Setinfo(m_colorP1, 80, 80, 1);
 			m_P2.Setinfo(m_colorP2, 80, 80, 2);
 			std::cout << m_P1.X() << "-p1-" << m_P1.Y() << std::endl;
-			std::cout << m_P2.X() << "-p2-" << m_P2.Y() << std::endl;
-			/*m_p1.setColor(m_colorP1);
-			m_p2.setColor(m_colorP2);*/
-			/*
-			if (!p1.setTexture())
-			return false;
-			if (!p1.setTexture())
-			return false;*/
+			std::cout << m_P2.X() << "-p2-" << m_P2.Y() << std::endl;			
 			return true;
 		}
 
@@ -75,18 +80,14 @@ namespace Tron
 			
 			m_scoreTextP1.setFillColor(sf::Color::Red);
 			m_scoreTextP2.setFillColor(sf::Color::Red);
-			
-			//m_scoreTextP1.setStyle(sf::Text::Bold); //посмотрите как вам жирный шрифт, может лучше
-			//m_scoreTextP2.setStyle(sf::Text::Bold);
 
 			m_scoreTextP1.setPosition(100, 40);
 			m_scoreTextP2.setPosition(700-36, 40);
 
-			return true;
-			
+			return true;			
 		}
 
-		bool Settup()
+		bool Setup()
 		{
 			if (!SetMusic())
 				return false;
@@ -95,8 +96,9 @@ namespace Tron
 			if (!SetInfo())
 				return false;
 			SetPlayers();
-			m_scoreP1 = 0; m_scoreP2 = 0;
+			m_scoreP1 = 0; m_scoreP2 = 0;			
 			Restart();
+			turnOnOff(true);
 			return true;
 		}
 		#pragma endregion
@@ -110,6 +112,7 @@ namespace Tron
 			{
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))//Выход из игры с обнулением счета
 				{
+					turnOnOff(false);
 					m_scoreP1 = 0; m_scoreP2 = 0;
 					Restart();
 					break;
@@ -118,7 +121,7 @@ namespace Tron
 				while (m_window->pollEvent(event))
 				{
 					if (event.type == sf::Event::Closed)
-						return;
+						m_window->close();
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))		m_P1.Left();
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))		m_P1.Right();
@@ -141,6 +144,7 @@ namespace Tron
 						if (!m_P1.move(map))//проверка на столкновение первого игрока
 						{
 							//Выполнится один раз после столкновения
+							m_crashSound.play();
 							m_scoreP2++;
 							Round = false;
 							if (m_scoreP2 == 3) { Game = false; }
@@ -148,12 +152,14 @@ namespace Tron
 						if (!m_P2.move(map)) //проверка на столкновение второго игрока
 						{
 							//Выполнится один раз после столкновения
+							m_crashSound.play();
 							m_scoreP1++;
 							Round = false;
 							if (m_scoreP1 == 3) { Game = false; }
 						}
 						if (m_P1.X() == m_P2.X() && m_P1.Y() == m_P2.Y())
 						{
+							m_crashSound.play();
 							segment.setPosition(m_P1.X() * 10, m_P1.Y() * 10); segment.setFillColor(m_P1.Color());    m_map.draw(segment);
 							segment.setPosition(m_P2.X() * 10, m_P2.Y() * 10); segment.setFillColor(m_P2.Color());    m_map.draw(segment);
 							m_map.display();
@@ -172,6 +178,7 @@ namespace Tron
 				else {//Если есть победитель
 					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 					{
+						turnOnOff(false);
 						break;
 					}
 				}
@@ -210,6 +217,31 @@ namespace Tron
 		int m_scoreP1=0, m_scoreP2=0;
 		sf::Font font;
 		sf::Text m_scoreTextP1, m_scoreTextP2;
+		sf::Music g_music;
+		sf::SoundBuffer buffer;
+		sf::Sound m_crashSound;
+
+		void turnOnOff(bool tmp)
+		{
+			if (tmp == true)
+			{
+				g_music.play();
+				/*for (int i = 0; i < 100; i++) //ЗАТУХАНИЕ (наоборот, хз как назвать)
+				{
+					g_music.setVolume(i);
+					std::this_thread::sleep_for(std::chrono::milliseconds(5));
+				}*/
+			}
+			else
+			{
+				/*for (int i = 100; i > 0; i--) //ЗАТУХАНИЕ
+				{
+					g_music.setVolume(i);
+					std::this_thread::sleep_for(std::chrono::milliseconds(5));
+				}*/
+				g_music.stop(); // или .pause() !!!!
+			}
+		}
 
 	};
 

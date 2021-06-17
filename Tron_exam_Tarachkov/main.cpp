@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <memory>
 #include <thread>
@@ -17,6 +18,7 @@ int main()
     Tron::Menu menu(window);
     if (!menu.Setup())
         return 1;
+    menu.turnOnOff(true);
     Tron::Game Game(window);
     sf::Color ColorP1 = sf::Color::Green, ColorP2 = sf::Color::Red;
     
@@ -36,8 +38,11 @@ int main()
         {
         case ButtonType::NEWGAME:
             std::cerr << "Button 'New Game' pressed" << std::endl;
-            Game.Settup();
+            menu.turnOnOff(false);
+            if (!Game.Setup())
+                return 1;
             Game.LifeCycle();
+            menu.turnOnOff(true);
             break;
 
         case ButtonType::SETTINGS:
