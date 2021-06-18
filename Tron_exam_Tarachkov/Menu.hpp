@@ -12,16 +12,16 @@ namespace Tron
 	public:
 		Menu(std::shared_ptr<sf::RenderWindow> window) //создает векторы с пустыми(!) кнопками для меню и для настроек
 		{
-			int btwButMain = (window.get()->getSize().y - 3 * mainH) / 4; //дистанция между кнопками в главном меню (4-количество пустых пространств между кнопками)
+			int btwButMain = (window.get()->getSize().y / 2 - 3 * mainH) / 2; //дистанция между кнопками в главном меню (4-количество пустых пространств между кнопками)
 			int btwClrSetW = (window.get()->getSize().x - 4 * clrSize) / 5;//дистанция по ширине между цветами в настройках (5-количество пустых пространств между кнопками)
 			int btwButSet = (window.get()->getSize().y - 4 * mainH) / 5;//дистанция по высоте между кнопками в настройках (5-количество пустых пространств между кнопками)
 			m_window = window;
 			//-----------------------------КНОПКИ МЕНЮ------------------------------------
-			std::shared_ptr<Button> newGameBut = std::make_shared<Button>((window.get()->getSize().x - mainW) / 2, btwButMain * 1 + mainH * 0, ButtonType::NEWGAME);
+			std::shared_ptr<Button> newGameBut = std::make_shared<Button>((window.get()->getSize().x - mainW) / 2, window.get()->getSize().y/4 + btwButMain * 1 + mainH * 0, ButtonType::NEWGAME);
 			m_buttonsM.push_back(newGameBut);
-			std::shared_ptr<Button> settingsBut = std::make_shared<Button>((window.get()->getSize().x - mainW) / 2, btwButMain * 2 + mainH * 1, ButtonType::SETTINGS);
+			std::shared_ptr<Button> settingsBut = std::make_shared<Button>((window.get()->getSize().x - mainW) / 2, window.get()->getSize().y / 4 + btwButMain * 2 + mainH * 1, ButtonType::SETTINGS);
 			m_buttonsM.push_back(settingsBut);
-			std::shared_ptr<Button> exitBut = std::make_shared<Button>((window.get()->getSize().x - mainW) / 2, btwButMain * 3 + mainH * 2, ButtonType::EXIT);
+			std::shared_ptr<Button> exitBut = std::make_shared<Button>((window.get()->getSize().x - mainW) / 2, window.get()->getSize().y / 4 + btwButMain * 3 + mainH * 2, ButtonType::EXIT);
 			m_buttonsM.push_back(exitBut);
 			//------------------------КНОПКИ ЦВЕТОВ В НАСТРОЙКАХ----------------------------------------
 			std::shared_ptr<Button> redBut = std::make_shared<Button>(btwClrSetW * 1 + clrSize * 0, 3 * btwButSet + 2 * mainH, ButtonType::C_RED);
@@ -47,7 +47,9 @@ namespace Tron
 			m_buttonsS.push_back(Choose1But);
 			std::shared_ptr<Button> Choose2But = std::make_shared<Button>((window.get()->getSize().x * 2 - mainW) / 3 , btwButSet * 2 + 1 * mainH, ButtonType::CHOOSECOLORP2);
 			m_buttonsS.push_back(Choose2But);
-
+			//--------------------------ПРИВЯЗКА ТЕКСТУР ДЕКОРА К СПРАЙТАМ--------------------------------
+			m_Background.setTexture(m_BackgroundT);
+			m_Background.setTextureRect(sf::IntRect(0, 0, 800, 900));
 		}
 
 		bool SetTextures()
@@ -63,6 +65,36 @@ namespace Tron
 				return false;
 			if (!m_textureP2.loadFromFile("..\\assets\\ChoosedP2.png"))
 				return false;
+			if (!m_LeftT.loadFromFile("..\\assets\\LeftPerson.png"))
+				return false;
+			if (!m_RightT.loadFromFile("..\\assets\\RightPerson.png"))
+				return false;
+			if (!m_LogoT.loadFromFile("..\\assets\\Logo.png"))
+				return false;
+			if (!m_BackgroundT.loadFromFile("..\\assets\\BackgroundMenu.png"))
+				return false;
+			if (!m_FirstPT.loadFromFile("..\\assets\\FirstPlayer.png"))
+				return false;
+			if (!m_SecondPT.loadFromFile("..\\assets\\SecondPlayer.png"))
+				return false;
+			if (!m_FrameT.loadFromFile("..\\assets\\Frame.png"))
+				return false;
+			
+			m_Frame.setTexture(m_FrameT);
+			m_Frame.setScale(2, 2);
+			m_LeftMainPerson.setTexture(m_LeftT);
+			m_RightMainPerson.setTexture(m_RightT);
+			m_Logo.setTexture(m_LogoT);
+			//Настройка иконки первого персонажа
+			m_iconP1.setTexture(m_FirstPT);		
+			m_iconP1.setPosition(0, 0);
+			m_iconP1.setScale(2, 2);
+			//Настройка иконки второго персонажа
+			m_iconP2.setTexture(m_SecondPT);	
+			m_iconP2.setOrigin(m_iconP2.getGlobalBounds().width, 0);
+			m_iconP2.setPosition(m_window->getSize().x, 0);
+			m_iconP2.setScale(2, 2);
+
 
 			m_spriteP1.setTexture(m_textureP1);
 			m_spriteP2.setTexture(m_textureP2);
@@ -116,6 +148,10 @@ namespace Tron
 		void DisplayMenu() //функция вывода меню
 		{
 			m_window->clear();
+			m_window->draw(m_Background);
+			m_window->draw(m_LeftMainPerson);
+			m_window->draw(m_RightMainPerson);
+			m_window->draw(m_Logo);
 			for (const auto& button : m_buttonsM)
 				m_window->draw(button->Get());
 			m_window->display();
@@ -124,8 +160,15 @@ namespace Tron
 		void DisplaySettings() //функция вывода настроек
 		{
 			m_window->clear();
+			m_window->draw(m_Background);
 			for (const auto& button : m_buttonsS)
 				m_window->draw(button->Get());
+			m_Frame.setPosition(0, 0);
+			m_window->draw(m_Frame);
+			m_window->draw(m_iconP1);
+			m_Frame.setPosition(m_window->getSize().x-m_iconP1.getGlobalBounds().width, 0);
+			m_window->draw(m_Frame);
+			m_window->draw(m_iconP2);
 			m_window->draw(m_spriteP1);
 			m_window->draw(m_spriteP2);
 			m_window->display();
@@ -167,7 +210,8 @@ namespace Tron
 					if (event.type == sf::Event::Closed)
 						m_window->close();
 				}
-
+				m_iconP1.setColor(colorP1);
+				m_iconP2.setColor(colorP2);
 				ButtonType button = PressedButtonS(); //переменной button присваиваем тип нажатой кнопки
 
 				switch (button) //согласно типу по разному отрабатываем для каждой из кнопок
@@ -229,9 +273,13 @@ namespace Tron
 		std::vector<std::shared_ptr<Button>> m_buttonsM; //вектор кнопок для МЕНЮ
 		std::vector<std::shared_ptr<Button>> m_buttonsS; //вектор кнопок для НАСТРОЕК
 
-		sf::Texture m_textureP1, m_textureP2;
+		sf::Texture m_textureP1, m_textureP2, m_LogoT, m_RightT, m_LeftT, m_BackgroundT,m_FirstPT,m_SecondPT,m_FrameT;
 		sf::Sprite m_spriteP1, m_spriteP2;
 		sf::Music m_music;
+		sf::Sprite m_LeftMainPerson, m_RightMainPerson;
+		sf::Sprite m_Logo;
+		sf::Sprite m_Background;
+		sf::Sprite m_iconP1, m_iconP2,m_Frame;
 
 		void PressColorBut(sf::Color& colorP1, sf::Color& colorP2, int numberBut)
 		{
