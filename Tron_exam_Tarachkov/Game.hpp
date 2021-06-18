@@ -69,20 +69,29 @@ namespace Tron
 				return false;					
 						
 			m_scoreTextP1.setFont(font);
-			m_scoreTextP2.setFont(font);			
+			m_scoreTextP2.setFont(font);
+			m_PrSpace.setFont(font);
 			
 			m_scoreTextP1.setString(std::to_string(m_scoreP1));
 			m_scoreTextP2.setString(std::to_string(m_scoreP2));
+			m_PrSpace.setString("Press Space to start game");
 
 			// set the character size in pixels, not points!
 			m_scoreTextP1.setCharacterSize(36); 
 			m_scoreTextP2.setCharacterSize(36);
+			m_PrSpace.setCharacterSize(24);
+
 			
 			m_scoreTextP1.setFillColor(sf::Color::Red);
 			m_scoreTextP2.setFillColor(sf::Color::Red);
+			sf::Color tmpclr(135, 135, 135);
+			m_PrSpace.setFillColor(tmpclr);
 
 			m_scoreTextP1.setPosition(100, 40);
 			m_scoreTextP2.setPosition(700-36, 40);
+			m_PrSpace.setPosition(100, 40);
+
+			m_PrSpace.setPosition(m_width / 2 - m_PrSpace.getGlobalBounds().width/2, 40);
 
 			return true;			
 		}
@@ -107,7 +116,10 @@ namespace Tron
 		{
 			sf::RectangleShape segment(sf::Vector2f(10, 10));
 			bool Game = true;
-			bool Round = true;
+			bool Round = false;
+			segment.setPosition(m_P1.X() * 10, m_P1.Y() * 10); segment.setFillColor(m_P1.Color());    m_map.draw(segment);
+			segment.setPosition(m_P2.X() * 10, m_P2.Y() * 10); segment.setFillColor(m_P2.Color());    m_map.draw(segment);
+			m_map.display();
 			while (m_window->isOpen())
 			{
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))//¬ыход из игры с обнулением счета
@@ -147,7 +159,11 @@ namespace Tron
 							m_crashSound.play();
 							m_scoreP2++;
 							Round = false;
-							if (m_scoreP2 == 3) { Game = false; }
+							m_PrSpace.setString("Press Space to restart round");
+							if (m_scoreP2 == 3) { 
+								Game = false; 
+								m_PrSpace.setString("Press Space to return to the main menu"); 
+							}
 						}
 						if (!m_P2.move(map)) //проверка на столкновение второго игрока
 						{
@@ -155,7 +171,11 @@ namespace Tron
 							m_crashSound.play();
 							m_scoreP1++;
 							Round = false;
-							if (m_scoreP1 == 3) { Game = false; }
+							m_PrSpace.setString("Press Space to restart round");
+							if (m_scoreP1 == 3) { 
+								Game = false; 
+								m_PrSpace.setString("Press Space to return to the main menu"); 
+							}
 						}
 						if (m_P1.X() == m_P2.X() && m_P1.Y() == m_P2.Y())
 						{
@@ -164,6 +184,7 @@ namespace Tron
 							segment.setPosition(m_P2.X() * 10, m_P2.Y() * 10); segment.setFillColor(m_P2.Color());    m_map.draw(segment);
 							m_map.display();
 							Round = false;
+							m_PrSpace.setString("Press Space to restart round");
 						}
 					}
 					else {//≈сли закончилс€ раунд
@@ -183,11 +204,14 @@ namespace Tron
 					}
 				}
 				
+				m_PrSpace.setPosition(m_width / 2 - m_PrSpace.getGlobalBounds().width / 2, 40);
 				m_scoreTextP1.setString(std::to_string(m_scoreP1));
 				m_scoreTextP2.setString(std::to_string(m_scoreP2));
 				m_window->clear();
 				m_window->draw(m_scoreTextP1);
 				m_window->draw(m_scoreTextP2);
+				if (!Round || !Game)
+					m_window->draw(m_PrSpace);
 				m_window->draw(m_back);
 				m_window->display();
 				
@@ -217,6 +241,7 @@ namespace Tron
 		int m_scoreP1=0, m_scoreP2=0;
 		sf::Font font;
 		sf::Text m_scoreTextP1, m_scoreTextP2;
+		sf::Text m_PrSpace;
 		sf::Music g_music;
 		sf::SoundBuffer buffer;
 		sf::Sound m_crashSound;
