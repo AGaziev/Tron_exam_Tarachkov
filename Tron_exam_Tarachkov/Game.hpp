@@ -296,18 +296,7 @@ namespace Tron
 				g_music.stop(); // или .pause() !!!!
 			}
 		}
-
-		void Boom(int x, int y, int player)
-		{
-			m_Crash.setPosition(x * 10, y * 10);
-			if (player == 1)
-				for (int i = 0; i < 4; i++) {
-					m_Crash.setTextureRect(sf::IntRect(30 * i, 0, 30, 30));
-					m_window->draw(m_Crash);
-					m_window->display();
-				}
-
-		}
+				
 
 	};
 

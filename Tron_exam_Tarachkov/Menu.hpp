@@ -76,6 +76,8 @@ namespace Tron
 		{			
 			if (!m_music.openFromFile("..\\music\\TRON Legacy.ogg"))
 				return false;
+
+			m_music.setVolume(30);
 			return true;
 		}
 		
