@@ -76,7 +76,6 @@ namespace Tron
 			m_scoreTextP2.setString(std::to_string(m_scoreP2));
 			m_PrSpace.setString("Press Space to start game");
 
-			// set the character size in pixels, not points!
 			m_scoreTextP1.setCharacterSize(36); 
 			m_scoreTextP2.setCharacterSize(36);
 			m_PrSpace.setCharacterSize(24);
@@ -89,9 +88,12 @@ namespace Tron
 
 			m_scoreTextP1.setPosition(100, 40);
 			m_scoreTextP2.setPosition(700-36, 40);
-			m_PrSpace.setPosition(100, 40);
-
 			m_PrSpace.setPosition(m_width / 2 - m_PrSpace.getGlobalBounds().width/2, 40);
+
+			if (!m_textureCrash.loadFromFile("..\\assets\\Crash.png"))
+				return false;
+			m_Crash.setTexture(m_textureCrash);
+			m_Crash.setOrigin(10, 10);
 
 			return true;			
 		}
@@ -114,6 +116,7 @@ namespace Tron
 
 		void LifeCycle()
 		{
+			int dead = 0,i=0;
 			sf::RectangleShape segment(sf::Vector2f(10, 10));
 			bool Game = true;
 			bool Round = false;
@@ -149,12 +152,12 @@ namespace Tron
 					if (Round) {
 						segment.setPosition(m_P1.X() * 10, m_P1.Y() * 10); segment.setFillColor(m_P1.Color());    m_map.draw(segment);
 						segment.setPosition(m_P2.X() * 10, m_P2.Y() * 10); segment.setFillColor(m_P2.Color());    m_map.draw(segment);
-						m_map.display();
 
 						map[m_P1.X()][m_P1.Y()] = true;
 						map[m_P2.X()][m_P2.Y()] = true;
 						if (!m_P1.move(map))//проверка на столкновение первого игрока
 						{
+							dead = 1;
 							//Выполнится один раз после столкновения
 							m_crashSound.play();
 							m_scoreP2++;
@@ -167,6 +170,7 @@ namespace Tron
 						}
 						if (!m_P2.move(map)) //проверка на столкновение второго игрока
 						{
+							dead = 2;
 							//Выполнится один раз после столкновения
 							m_crashSound.play();
 							m_scoreP1++;
@@ -190,6 +194,7 @@ namespace Tron
 					else {//Если закончился раунд
 						if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 						{
+							dead = 0;
 							Round = true;
 							Restart();
 						}
@@ -203,7 +208,6 @@ namespace Tron
 						break;
 					}
 				}
-				
 				m_PrSpace.setPosition(m_width / 2 - m_PrSpace.getGlobalBounds().width / 2, 40);
 				m_scoreTextP1.setString(std::to_string(m_scoreP1));
 				m_scoreTextP2.setString(std::to_string(m_scoreP2));
@@ -213,8 +217,31 @@ namespace Tron
 				if (!Round || !Game)
 					m_window->draw(m_PrSpace);
 				m_window->draw(m_back);
+				if (dead == 1)
+				{
+					m_Crash.setColor(m_colorP1);
+					m_Crash.setPosition(m_P1.X() * 10, m_P1.Y() * 10+100);
+					m_Crash.setTextureRect(sf::IntRect(30 * i, 0, 30, 30));
+					m_window->draw(m_Crash);
+					i++;
+					if (i == 4) {
+						dead = 0;
+						i = 0;
+					}
+				}
+				if (dead == 2)
+				{
+					m_Crash.setColor(m_colorP2);
+					m_Crash.setPosition(m_P2.X() * 10, m_P2.Y() * 10+100);
+					m_Crash.setTextureRect(sf::IntRect(30 * i, 0, 30, 30));
+					m_window->draw(m_Crash);
+					i++;
+					if (i == 4) {
+						dead = 0;
+						i = 0;
+					}
+				}
 				m_window->display();
-				
 				std::this_thread::sleep_for(std::chrono::milliseconds(50));
 			}
 		}
@@ -231,9 +258,11 @@ namespace Tron
 		std::shared_ptr<sf::RenderWindow> m_window;
 		int m_width, m_height;
 		sf::Texture m_textureBack;
+		sf::Texture m_textureCrash;
 		sf::Color m_colorP1, m_colorP2;
 		sf::Sprite m_back;
 		sf::Sprite m_spriteBackground;
+		sf::Sprite m_Crash;
 		sf::RenderTexture m_map;
 		bool map[80][80] = { 0 };
 		Player m_P1, m_P2;
@@ -266,6 +295,18 @@ namespace Tron
 				}*/
 				g_music.stop(); // или .pause() !!!!
 			}
+		}
+
+		void Boom(int x, int y, int player)
+		{
+			m_Crash.setPosition(x * 10, y * 10);
+			if (player == 1)
+				for (int i = 0; i < 4; i++) {
+					m_Crash.setTextureRect(sf::IntRect(30 * i, 0, 30, 30));
+					m_window->draw(m_Crash);
+					m_window->display();
+				}
+
 		}
 
 	};
