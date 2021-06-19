@@ -73,9 +73,9 @@ namespace Tron
 				return false;
 			if (!m_BackgroundT.loadFromFile("..\\assets\\BackgroundMenu.png"))
 				return false;
-			if (!m_FirstPT.loadFromFile("..\\assets\\FirstPlayer.png"))
+			if (!m_iconP1Texture.loadFromFile("..\\assets\\FirstPlayer.png"))
 				return false;
-			if (!m_SecondPT.loadFromFile("..\\assets\\SecondPlayer.png"))
+			if (!m_iconP2Texture.loadFromFile("..\\assets\\SecondPlayer.png"))
 				return false;
 			if (!m_FrameT.loadFromFile("..\\assets\\Frame.png"))
 				return false;
@@ -86,11 +86,11 @@ namespace Tron
 			m_RightMainPerson.setTexture(m_RightT);
 			m_Logo.setTexture(m_LogoT);
 			//Настройка иконки первого персонажа
-			m_iconP1.setTexture(m_FirstPT);		
+			m_iconP1.setTexture(m_iconP1Texture);		
 			m_iconP1.setPosition(0, 0);
 			m_iconP1.setScale(2, 2);
 			//Настройка иконки второго персонажа
-			m_iconP2.setTexture(m_SecondPT);	
+			m_iconP2.setTexture(m_iconP2Texture);	
 			m_iconP2.setOrigin(m_iconP2.getGlobalBounds().width, 0);
 			m_iconP2.setPosition(m_window->getSize().x, 0);
 			m_iconP2.setScale(2, 2);
@@ -98,8 +98,8 @@ namespace Tron
 
 			m_spriteP1.setTexture(m_textureP1);
 			m_spriteP2.setTexture(m_textureP2);
-			m_spriteP1.setPosition(m_buttonsS[2]->X(), m_buttonsS[2]->Y());
-			m_spriteP2.setPosition(m_buttonsS[0]->X(), m_buttonsS[0]->Y());
+			m_spriteP1.setPosition(m_buttonsS[5]->X(), m_buttonsS[5]->Y());
+			m_spriteP2.setPosition(m_buttonsS[3]->X(), m_buttonsS[3]->Y());
 
 			return true;
 		}
@@ -123,26 +123,9 @@ namespace Tron
 		}
 
 		void turnOnOff(bool tmp)
-		{	
-			
-			if (tmp == true)
-			{
-				m_music.play();
-				/*for (int i = 0; i <100; i++) //ЗАТУХАНИЕ (наоборот, хз как назвать)
-				{
-					m_music.setVolume(i);
-					std::this_thread::sleep_for(std::chrono::milliseconds(10));
-				}*/		
-			}				
-			else
-			{
-				/*for (int i = 100; i > 0; i--) //ЗАТУХАНИЕ 
-				{
-					m_music.setVolume(i);
-					std::this_thread::sleep_for(std::chrono::milliseconds(5));
-				}		*/			
-				m_music.stop(); // или .pause() !!!!
-			}
+		{			
+			if (tmp == true)	m_music.play();						
+			else m_music.stop();			
 		}
 
 		void DisplayMenu() //функция вывода меню
@@ -198,6 +181,38 @@ namespace Tron
 						return button->Type();
 			}
 			return ButtonType::NONE;
+		}
+
+		sf::Texture getTexture(int tmp)
+		{
+			switch (tmp)
+			{
+			case 1:
+				return m_iconP1Texture;
+			case 2:
+				return m_iconP2Texture;
+			}
+		}
+
+
+		void Animation(int& i, bool Up)
+		{
+			
+			sf::Color tmpcolor(0, 0, 0, 50);			
+			if (Up == true)
+			{
+				m_Logo.setColor(m_Logo.getColor() + tmpcolor);	
+				/*m_RightMainPerson.setColor(m_RightMainPerson.getColor() + tmpcolor);
+				m_LeftMainPerson.setColor(m_LeftMainPerson.getColor() + tmpcolor);*/
+			}
+			else
+			{
+				m_Logo.setColor(m_Logo.getColor() - tmpcolor);	
+				/*m_RightMainPerson.setColor(m_RightMainPerson.getColor() - tmpcolor);
+				m_LeftMainPerson.setColor(m_LeftMainPerson.getColor() - tmpcolor);*/				
+			}
+			i++;
+			
 		}
 
 		void loopSettings(sf::Color& colorP1, sf::Color& colorP2) //функция для работы с окном настроек (такая же функция для меню реализована в мейне)
@@ -273,13 +288,15 @@ namespace Tron
 		std::vector<std::shared_ptr<Button>> m_buttonsM; //вектор кнопок для МЕНЮ
 		std::vector<std::shared_ptr<Button>> m_buttonsS; //вектор кнопок для НАСТРОЕК
 
-		sf::Texture m_textureP1, m_textureP2, m_LogoT, m_RightT, m_LeftT, m_BackgroundT,m_FirstPT,m_SecondPT,m_FrameT;
-		sf::Sprite m_spriteP1, m_spriteP2;
-		sf::Music m_music;
-		sf::Sprite m_LeftMainPerson, m_RightMainPerson;
-		sf::Sprite m_Logo;
-		sf::Sprite m_Background;
-		sf::Sprite m_iconP1, m_iconP2,m_Frame;
+		sf::Texture m_textureP1, m_textureP2;
+		sf::Texture m_LogoT, m_RightT, m_LeftT, m_BackgroundT;
+		sf::Texture m_iconP1Texture, m_iconP2Texture, m_FrameT;
+
+		sf::Sprite m_spriteP1, m_spriteP2; //надписи Р1 и Р2 (на кнопках цвета)
+		sf::Sprite m_Logo, m_RightMainPerson, m_LeftMainPerson, m_Background; //спрайты для меню
+		sf::Sprite m_iconP1, m_iconP2, m_Frame; //иконки шлемов		
+		
+		sf::Music m_music;		
 
 		void PressColorBut(sf::Color& colorP1, sf::Color& colorP2, int numberBut)
 		{
@@ -323,8 +340,9 @@ namespace Tron
 				colorP2 = ColorNow;
 				m_spriteP2.setPosition(m_buttonsS[numberBut]->X(), m_buttonsS[numberBut]->Y());
 			}
-
 		}
+	
+
 	};
 
 

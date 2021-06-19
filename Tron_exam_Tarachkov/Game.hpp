@@ -13,17 +13,25 @@ namespace Tron
 		{
 			m_window = window;
 			m_width = m_window->getSize().x;
-			m_height = m_window->getSize().y;
-			m_colorP1 = sf::Color::Green;
-			m_colorP2 = sf::Color::Red;			
+			m_height = m_window->getSize().y;				
 		}
-
-		//TO DO
+		
 		#pragma region SETUP
-		void SetColors(sf::Color colorP1, sf::Color colorP2)
+		void SetColors(sf::Color colorP1, sf::Color colorP2, sf::Texture P1, sf::Texture P2)
 		{
 			m_colorP1 = colorP1;
 			m_colorP2 = colorP2;
+			m_TexturePlayer1 = P1;
+			m_TexturePlayer2 = P2;
+			
+			m_Player1.setTexture(m_TexturePlayer1);
+			m_Player2.setTexture(m_TexturePlayer2);
+			
+			m_Player1.setColor(m_colorP1);
+			m_Player2.setColor(m_colorP2);
+			
+			m_Player1.setPosition(0, 0);
+			m_Player2.setPosition(m_window->getSize().x - m_Player2.getGlobalBounds().width, 0);
 		}
 		
 		bool SetMusic()
@@ -31,11 +39,9 @@ namespace Tron
 			if (!g_music.openFromFile("..\\music\\Hotline.ogg"))
 				return false;
 			
-			if (!buffer.loadFromFile("..\\music\\crash7.wav"))
-			{
-				std::cerr << "Fail load crash";
+			if (!buffer.loadFromFile("..\\music\\crash7.wav"))				
 				return false;
-			}				
+							
 			m_crashSound.setBuffer(buffer);			
 
 			return true;
@@ -109,7 +115,7 @@ namespace Tron
 			SetPlayers();
 			m_scoreP1 = 0; m_scoreP2 = 0;			
 			Restart();
-			turnOnOff(true);
+			g_music.play();
 			return true;
 		}
 		#pragma endregion
@@ -127,7 +133,7 @@ namespace Tron
 			{
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))//Выход из игры с обнулением счета
 				{
-					turnOnOff(false);
+					g_music.stop();
 					m_scoreP1 = 0; m_scoreP2 = 0;
 					Restart();
 					break;
@@ -204,7 +210,7 @@ namespace Tron
 				else {//Если есть победитель
 					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 					{
-						turnOnOff(false);
+						g_music.stop();
 						break;
 					}
 				}
@@ -212,6 +218,7 @@ namespace Tron
 				m_scoreTextP1.setString(std::to_string(m_scoreP1));
 				m_scoreTextP2.setString(std::to_string(m_scoreP2));
 				m_window->clear();
+				
 				m_window->draw(m_scoreTextP1);
 				m_window->draw(m_scoreTextP2);
 				if (!Round || !Game)
@@ -241,6 +248,8 @@ namespace Tron
 						i = 0;
 					}
 				}
+				m_window->draw(m_Player1);
+				m_window->draw(m_Player2);
 				m_window->display();
 				std::this_thread::sleep_for(std::chrono::milliseconds(50));
 			}
@@ -257,45 +266,30 @@ namespace Tron
 		
 		std::shared_ptr<sf::RenderWindow> m_window;
 		int m_width, m_height;
-		sf::Texture m_textureBack;
-		sf::Texture m_textureCrash;
 		sf::Color m_colorP1, m_colorP2;
-		sf::Sprite m_back;
-		sf::Sprite m_spriteBackground;
-		sf::Sprite m_Crash;
+
 		sf::RenderTexture m_map;
 		bool map[80][80] = { 0 };
 		Player m_P1, m_P2;
+
+		sf::Texture m_textureBack;
+		sf::Texture m_textureCrash;
+		sf::Texture m_TexturePlayer1, m_TexturePlayer2;
+		
+		sf::Sprite m_back;
+		sf::Sprite m_spriteBackground; 
+		sf::Sprite m_Crash;
+		sf::Sprite m_Player1, m_Player2;
+		
 
 		int m_scoreP1=0, m_scoreP2=0;
 		sf::Font font;
 		sf::Text m_scoreTextP1, m_scoreTextP2;
 		sf::Text m_PrSpace;
+		
 		sf::Music g_music;
 		sf::SoundBuffer buffer;
-		sf::Sound m_crashSound;
-
-		void turnOnOff(bool tmp)
-		{
-			if (tmp == true)
-			{
-				g_music.play();
-				/*for (int i = 0; i < 100; i++) //ЗАТУХАНИЕ (наоборот, хз как назвать)
-				{
-					g_music.setVolume(i);
-					std::this_thread::sleep_for(std::chrono::milliseconds(5));
-				}*/
-			}
-			else
-			{
-				/*for (int i = 100; i > 0; i--) //ЗАТУХАНИЕ
-				{
-					g_music.setVolume(i);
-					std::this_thread::sleep_for(std::chrono::milliseconds(5));
-				}*/
-				g_music.stop(); // или .pause() !!!!
-			}
-		}
+		sf::Sound m_crashSound;		
 				
 
 	};

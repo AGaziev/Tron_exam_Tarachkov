@@ -20,9 +20,9 @@ int main()
         return 1;
     menu.turnOnOff(true);
     Tron::Game Game(window);
-    sf::Color ColorP1 = sf::Color::Green, ColorP2 = sf::Color::Red;
+    sf::Color ColorP1 = sf::Color::White, ColorP2 = sf::Color::Yellow;
     
-
+    int i = 0;
     while (window->isOpen())
     {
         sf::Event event;
@@ -31,6 +31,13 @@ int main()
             if (event.type == sf::Event::Closed)
                 window->close();
         }
+        
+        if (i < 3)        
+            menu.Animation(i, false);
+        else if (i < 6)        
+            menu.Animation(i, true);  
+        else if (i == 6) 
+            i = 0; 
 
         ButtonType button = menu.PressedButtonM();
 
@@ -39,15 +46,16 @@ int main()
         case ButtonType::NEWGAME:
             std::cerr << "Button 'New Game' pressed" << std::endl;
             menu.turnOnOff(false);
+            Game.SetColors(ColorP1, ColorP2, menu.getTexture(1), menu.getTexture(2));
             if (!Game.Setup())
-                return 1;
+                return 1;            
             Game.LifeCycle();
             menu.turnOnOff(true);
             break;
 
         case ButtonType::SETTINGS:
             menu.loopSettings(ColorP1, ColorP2);
-            Game.SetColors(ColorP1, ColorP2);
+            Game.SetColors(ColorP1, ColorP2, menu.getTexture(1), menu.getTexture(2));
             break;
 
         case ButtonType::EXIT:
