@@ -44,7 +44,7 @@ int main()
         switch (button)
         {
         case ButtonType::NEWGAME:
-            std::cerr << "Button 'New Game' pressed" << std::endl;
+            //std::cerr << "Button 'New Game' pressed" << std::endl;
             menu.turnOnOff(false);
             Game.SetColors(ColorP1, ColorP2, menu.getTexture(1), menu.getTexture(2));
             if (!Game.Setup())

@@ -51,12 +51,16 @@ namespace Tron
 		{
 			if (!m_textureBack.loadFromFile("..\\assets\\Background.png"))
 				return false;
+			if (!m_textureHUD.loadFromFile("..\\assets\\HUD.png"))
+				return false;
+			m_HUD.setTexture(m_textureHUD);
 			m_spriteBackground.setTexture(m_textureBack);
 			m_map.create(m_width, m_height);
 			m_map.setSmooth(true);
 			m_back.setPosition(0, 100);
 			m_back.setTexture(m_map.getTexture());
 			m_map.clear(); m_map.draw(m_spriteBackground);
+			
 			return true;
 		}
 
@@ -64,8 +68,8 @@ namespace Tron
 		{
 			m_P1.Setinfo(m_colorP1, 80, 80, 1);
 			m_P2.Setinfo(m_colorP2, 80, 80, 2);
-			std::cout << m_P1.X() << "-p1-" << m_P1.Y() << std::endl;
-			std::cout << m_P2.X() << "-p2-" << m_P2.Y() << std::endl;			
+			//std::cout << m_P1.X() << "-p1-" << m_P1.Y() << std::endl;
+			//std::cout << m_P2.X() << "-p2-" << m_P2.Y() << std::endl;			
 			return true;
 		}
 
@@ -78,22 +82,22 @@ namespace Tron
 			m_scoreTextP2.setFont(font);
 			m_PrSpace.setFont(font);
 			
-			m_scoreTextP1.setString(std::to_string(m_scoreP1));
-			m_scoreTextP2.setString(std::to_string(m_scoreP2));
+			m_scoreTextP1.setString("Player 1 \nScore: " + std::to_string(m_scoreP1));
+			m_scoreTextP2.setString("Player 2 \nScore: " + std::to_string(m_scoreP2));
 			m_PrSpace.setString("Press Space to start game");
 
-			m_scoreTextP1.setCharacterSize(36); 
-			m_scoreTextP2.setCharacterSize(36);
-			m_PrSpace.setCharacterSize(24);
+			m_scoreTextP1.setCharacterSize(44); 
+			m_scoreTextP2.setCharacterSize(44);
+			m_PrSpace.setCharacterSize(44);
 
 			
-			m_scoreTextP1.setFillColor(sf::Color::Red);
-			m_scoreTextP2.setFillColor(sf::Color::Red);
+			m_scoreTextP1.setFillColor(m_colorP1);
+			m_scoreTextP2.setFillColor(m_colorP2);
 			sf::Color tmpclr(135, 135, 135);
 			m_PrSpace.setFillColor(tmpclr);
 
-			m_scoreTextP1.setPosition(100, 40);
-			m_scoreTextP2.setPosition(700-36, 40);
+			m_scoreTextP1.setPosition(120, -5);
+			m_scoreTextP2.setPosition(m_width-210, -5);
 			m_PrSpace.setPosition(m_width / 2 - m_PrSpace.getGlobalBounds().width/2, 40);
 
 			if (!m_textureCrash.loadFromFile("..\\assets\\Crash.png"))
@@ -184,7 +188,7 @@ namespace Tron
 							m_PrSpace.setString("Press Space to restart round");
 							if (m_scoreP1 == 3) { 
 								Game = false; 
-								m_PrSpace.setString("Press Space to return to the main menu"); 
+								m_PrSpace.setString("Press Space to return to menu"); 
 							}
 						}
 						if (m_P1.X() == m_P2.X() && m_P1.Y() == m_P2.Y())
@@ -215,10 +219,11 @@ namespace Tron
 					}
 				}
 				m_PrSpace.setPosition(m_width / 2 - m_PrSpace.getGlobalBounds().width / 2, 40);
-				m_scoreTextP1.setString(std::to_string(m_scoreP1));
-				m_scoreTextP2.setString(std::to_string(m_scoreP2));
+				m_scoreTextP1.setString("Player 1 \nScore:" + std::to_string(m_scoreP1));
+				m_scoreTextP2.setString("Player 2 \nScore:" + std::to_string(m_scoreP2));
 				m_window->clear();
 				
+				m_window->draw(m_HUD);
 				m_window->draw(m_scoreTextP1);
 				m_window->draw(m_scoreTextP2);
 				if (!Round || !Game)
@@ -272,11 +277,11 @@ namespace Tron
 		bool map[80][80] = { 0 };
 		Player m_P1, m_P2;
 
-		sf::Texture m_textureBack;
+		sf::Texture m_textureBack, m_textureHUD;
 		sf::Texture m_textureCrash;
 		sf::Texture m_TexturePlayer1, m_TexturePlayer2;
 		
-		sf::Sprite m_back;
+		sf::Sprite m_back,m_HUD;
 		sf::Sprite m_spriteBackground; 
 		sf::Sprite m_Crash;
 		sf::Sprite m_Player1, m_Player2;

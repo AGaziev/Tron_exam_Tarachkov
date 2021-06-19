@@ -79,7 +79,7 @@ namespace Tron
 		}
 
 		void Reset() {
-			std::cout << m_num;
+			//std::cout << m_num;
 			if (m_num == 1)
 			{
 				m_x = m_w / 4;
