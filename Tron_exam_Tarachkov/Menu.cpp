@@ -146,7 +146,7 @@ namespace Tron
 	void Menu::Animation(int& i, bool Up)
 	{
 
-		sf::Color tmpcolor(0, 0, 0, 50);
+		sf::Color tmpcolor(0, 0, 0, 20);
 		if (Up == true)
 		{
 			m_Logo.setColor(m_Logo.getColor() + tmpcolor);
