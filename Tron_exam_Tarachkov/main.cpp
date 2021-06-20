@@ -1,12 +1,6 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include <iostream>
-#include <memory>
-#include <thread>
 #include "Menu.hpp"
 #include "Game.hpp"
-using Tron::ButtonType;
-
+#include <memory>
 
 int main()
 {
@@ -19,6 +13,7 @@ int main()
     if (!menu.Setup())
         return 1;
     menu.turnOnOff(true);
+
     Tron::Game Game(window);
     sf::Color ColorP1 = sf::Color::White, ColorP2 = sf::Color::Yellow;
     
@@ -39,12 +34,11 @@ int main()
         else if (i == 6) 
             i = 0; 
 
-        ButtonType button = menu.PressedButtonM();
+        Tron::ButtonType button = menu.PressedButtonM();
 
         switch (button)
         {
-        case ButtonType::NEWGAME:
-            //std::cerr << "Button 'New Game' pressed" << std::endl;
+        case Tron::ButtonType::NEWGAME:
             menu.turnOnOff(false);
             Game.SetColors(ColorP1, ColorP2, menu.getTexture(1), menu.getTexture(2));
             if (!Game.Setup())
@@ -53,12 +47,12 @@ int main()
             menu.turnOnOff(true);
             break;
 
-        case ButtonType::SETTINGS:
+        case Tron::ButtonType::SETTINGS:
             menu.loopSettings(ColorP1, ColorP2);
             Game.SetColors(ColorP1, ColorP2, menu.getTexture(1), menu.getTexture(2));
             break;
 
-        case ButtonType::EXIT:
+        case Tron::ButtonType::EXIT:
             window->close();
         }
 
