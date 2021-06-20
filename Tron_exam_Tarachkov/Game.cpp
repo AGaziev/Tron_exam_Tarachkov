@@ -120,7 +120,7 @@ namespace Tron
 
 	void Game::LifeCycle()
 	{
-		int dead = 0, i = 0;
+		int dead = 0, i = 0, j = 0;
 		sf::RectangleShape segment(sf::Vector2f(10, 10));
 		bool Game = true;
 		bool Round = false;
@@ -192,6 +192,7 @@ namespace Tron
 						m_crashSound.play();
 						segment.setPosition(m_P1.X() * 10, m_P1.Y() * 10); segment.setFillColor(m_P1.Color());    m_map.draw(segment);
 						segment.setPosition(m_P2.X() * 10, m_P2.Y() * 10); segment.setFillColor(m_P2.Color());    m_map.draw(segment);
+						dead = 3;
 						m_map.display();
 						Round = false;
 						m_PrSpace.setString("Press Space to restart round");
@@ -247,6 +248,27 @@ namespace Tron
 				if (i == 4) {
 					dead = 0;
 					i = 0;
+				}
+			}
+			if (dead == 3)
+			{
+				m_Crash.setColor(m_colorP1);
+				m_Crash.setPosition(m_P1.X() * 10, m_P1.Y() * 10 + 100);
+				m_Crash.setTextureRect(sf::IntRect(30 * i, 0, 30, 30));
+				m_window->draw(m_Crash);
+				i++;
+				if (i == 4) {
+					dead = 0;
+					i = 0;
+				}
+				m_Crash.setColor(m_colorP2);
+				m_Crash.setPosition((m_P2.X()-m_P2.dX()) * 10, (m_P2.Y()-m_P2.dY()) * 10 + 100);
+				m_Crash.setTextureRect(sf::IntRect(30 * j, 0, 30, 30));
+				m_window->draw(m_Crash);
+				j++;
+				if (j == 4) {
+					dead = 0;
+					j = 0;
 				}
 			}
 			m_window->draw(m_Player1);

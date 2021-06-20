@@ -24,6 +24,8 @@ namespace Tron
 		int X();
 		int Y();
 		sf::Color Color();
+		int dX();
+		int dY();
 		#pragma endregion
 
 		bool move(bool map[80][80]);

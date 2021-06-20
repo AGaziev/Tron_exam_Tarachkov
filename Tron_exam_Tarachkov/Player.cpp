@@ -64,6 +64,8 @@ namespace Tron
 	int Player::X() { return m_x; }
 	int Player::Y() { return m_y; }
 	sf::Color Player::Color() { return m_clr; }
+	int Player::dX() { return m_dx; }
+	int Player::dY() { return m_dy; }
 	#pragma endregion
 
 	bool Player::move(bool map[80][80])

@@ -52,51 +52,7 @@ namespace Tron
 		
 		sf::Music m_music;		
 
-		void PressColorBut(sf::Color& colorP1, sf::Color& colorP2, int numberBut)
-		{
-			sf::Color ColorNow;
-			
-			switch (numberBut)
-			{
-			case 0:
-				ColorNow = sf::Color::Red;
-				break;
-			case 1:
-				ColorNow = sf::Color::Cyan;
-				break;
-			case 2:
-				ColorNow = sf::Color::Green;
-				break;
-			case 3:
-				ColorNow = sf::Color::Yellow;
-				break;
-			case 4:
-				ColorNow = sf::Color(255, 127, 39);//Orange
-				break;
-			case 5:
-				ColorNow = sf::Color::White;
-				break;
-			case 6:
-				ColorNow = sf::Color::Magenta;
-				break;
-			case 7:
-				ColorNow = sf::Color(128, 0, 255); //Purple
-				break;
-			}	
-
-			if (m_buttonsS[9]->GetActivity() && colorP2 != ColorNow)
-			{
-				colorP1 = ColorNow;
-				m_iconP1.setColor(colorP1);
-				m_spriteP1.setPosition(m_buttonsS[numberBut]->X(), m_buttonsS[numberBut]->Y());
-			}
-			if (m_buttonsS[10]->GetActivity() && colorP1 != ColorNow)
-			{
-				colorP2 = ColorNow;
-				m_iconP2.setColor(colorP2);
-				m_spriteP2.setPosition(m_buttonsS[numberBut]->X(), m_buttonsS[numberBut]->Y());
-			}
-		}
+		void PressColorBut(sf::Color& colorP1, sf::Color& colorP2, int numberBut);
 	
 
 	};
